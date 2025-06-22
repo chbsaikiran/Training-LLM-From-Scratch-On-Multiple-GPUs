@@ -34,20 +34,17 @@ def ddp_setup(rank, world_size):
     if "MASTER_ADDR" not in os.environ:
         os.environ["MASTER_ADDR"] = "localhost"
     if "MASTER_PORT" not in os.environ:
-        os.environ["MASTER_PORT"] = "12345"
+        os.environ["MASTER_PORT"] = "12355"  # Changed port to avoid conflicts
 
-    # initialize process group
-    if platform.system() == "Windows":
-        # Disable libuv because PyTorch for Windows isn't built with support
-        os.environ["USE_LIBUV"] = "0"
-        # Windows users may have to use "gloo" instead of "nccl" as backend
-        # gloo: Facebook Collective Communication Library
-        init_process_group(backend="gloo", rank=rank, world_size=world_size)
-    else:
-        # nccl: NVIDIA Collective Communication Library
-        init_process_group(backend="nccl", rank=rank, world_size=world_size)
-
-    torch.cuda.set_device(rank)
+    init_process_group(backend="nccl", rank=rank, world_size=world_size)
+    torch.cuda.set_device(rank)  # Very important to set the device
+    
+    # Print GPU allocation
+    if rank == 0:
+        print(f"\nUsing {world_size} GPUs")
+        for i in range(world_size):
+            print(f"GPU {i}: {torch.cuda.get_device_name(i)}")
+        print()
 
 
 #####################################
@@ -205,17 +202,26 @@ class GPTModel(nn.Module):
 
         self.trf_blocks = nn.Sequential(
             *[TransformerBlock(cfg) for _ in range(cfg["n_layers"])])
-
+        
         self.final_norm = nn.LayerNorm(cfg["emb_dim"])
         self.out_head = nn.Linear(cfg["emb_dim"], cfg["vocab_size"], bias=False)
+        
+        # NEW: Enable gradient checkpointing
+        self.use_checkpoint = True
 
     def forward(self, in_idx):
         batch_size, seq_len = in_idx.shape
         tok_embeds = self.tok_emb(in_idx)
         pos_embeds = self.pos_emb(torch.arange(seq_len, device=in_idx.device))
-        x = tok_embeds + pos_embeds  # Shape [batch_size, num_tokens, emb_size]
+        x = tok_embeds + pos_embeds
         x = self.drop_emb(x)
-        x = self.trf_blocks(x)
+        
+        # NEW: Use gradient checkpointing
+        if self.use_checkpoint and self.training:
+            x = torch.utils.checkpoint.checkpoint_sequential(self.trf_blocks, 3, x)
+        else:
+            x = self.trf_blocks(x)
+            
         x = self.final_norm(x)
         logits = self.out_head(x)
         return logits
@@ -312,9 +318,13 @@ def generate_and_print_sample(model, device, start_context):
 
 
 def train_model_simple_with_timing(model, train_loader, val_loader, optimizer, device,
-                                   num_epochs, eval_freq, eval_iter, start_context, tokenizer):
+                                   num_epochs, eval_freq, eval_iter, start_context, tokenizer, settings):
     train_losses, val_losses, track_tokens = [], [], []
     total_tokens, global_step, last_tokens = 0, -1, 0
+    
+    # Get gradient accumulation steps from settings
+    grad_accum_steps = settings.get("gradient_accumulation_steps", 1)
+    optimizer.zero_grad()
 
     # NEW: Determine the current rank (default to 0 if not distributed)
     rank = torch.distributed.get_rank() if torch.distributed.is_initialized() else 0
@@ -340,14 +350,19 @@ def train_model_simple_with_timing(model, train_loader, val_loader, optimizer, d
             train_loader.sampler.set_epoch(epoch)
 
         model.train()
-        for inp_batch, tgt_batch in train_loader:
-            optimizer.zero_grad()
+        for batch_idx, (inp_batch, tgt_batch) in enumerate(train_loader):
             global_step += 1
 
             # Forward and backward pass
             loss = calc_loss_batch(inp_batch, tgt_batch, model, device)
+            # NEW: Scale loss for gradient accumulation
+            loss = loss / grad_accum_steps
             loss.backward()
-            optimizer.step()
+            
+            # NEW: Only optimize after accumulating gradients
+            if (batch_idx + 1) % grad_accum_steps == 0:
+                optimizer.step()
+                optimizer.zero_grad()
 
             total_tokens += inp_batch.numel()
 
@@ -438,24 +453,25 @@ def plot_losses(epochs_seen, tokens_seen, train_losses, val_losses):
 
 # NEW: Add rank and world_size
 def main(gpt_config, settings, rank, world_size):
-
-    ddp_setup(rank, world_size)  # NEW: initialize process groups
-    device = torch.device("cuda", rank)
-
-    torch.manual_seed(123)
-
-    # NEW: Print info only on 1 GPU
+    # Initialize process group first
+    ddp_setup(rank, world_size)
+    device = torch.device(f"cuda:{rank}")  # Explicitly set device based on rank
+    
+    torch.manual_seed(123 + rank)  # Different seed for each GPU
+    
     if rank == 0:
         print(f"PyTorch version: {torch.__version__}")
         if torch.cuda.is_available():
             print(f"CUDA version: {torch.version.cuda}")
-
+            print(f"Using GPU: {torch.cuda.get_device_name(rank)}")
+            print(f"Process rank: {rank}, World size: {world_size}")
+            
             capability = torch.cuda.get_device_capability()
-            if capability[0] >= 7:  # Volta (7.0+), Turing (7.5+), Ampere (8.0+), Hopper (9.0+)
+            if capability[0] >= 7:
                 torch.set_float32_matmul_precision("high")
-                print("Uses tensor cores")
+                print("Using tensor cores")
             else:
-                print("Tensor cores not supported on this GPU. Using default precision.")
+                print("Tensor cores not supported on this GPU")
         print()
 
     ##############################
@@ -542,7 +558,8 @@ def main(gpt_config, settings, rank, world_size):
         eval_freq=5,
         eval_iter=1,
         start_context="Every effort moves you",
-        tokenizer=tokenizer
+        tokenizer=tokenizer,
+        settings=settings
     )
 
     # NEW: Clean up distributed processes
@@ -552,64 +569,59 @@ def main(gpt_config, settings, rank, world_size):
 
 
 if __name__ == "__main__":
-
-    # NEW: Extract rank and world size from environment variables
-    if "WORLD_SIZE" in os.environ:
-        world_size = int(os.environ["WORLD_SIZE"])
-    else:
-        world_size = 1
-
-    if "LOCAL_RANK" in os.environ:
-        rank = int(os.environ["LOCAL_RANK"])
-    elif "RANK" in os.environ:
-        rank = int(os.environ["RANK"])
-    else:
-        rank = 0
+    # Clear any existing CUDA memory
+    torch.cuda.empty_cache()
+    
+    # Set memory management settings
+    os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'max_split_size_mb:512,expandable_segments:True'
+    
+    # Get world size and rank from environment variables
+    world_size = int(os.environ.get("WORLD_SIZE", 1))
+    rank = int(os.environ.get("LOCAL_RANK", 0))
+    
+    # Ensure CUDA is available
+    if not torch.cuda.is_available():
+        raise RuntimeError("CUDA is not available. This code requires GPU support.")
+    
+    if world_size == 1:
+        print("\nWARNING: Running on a single GPU. To use multiple GPUs, run with:\n")
+        print("torchrun --nproc_per_node=NUM_GPUS 02_opt_multi_gpu_ddp.py\n")
+        print("Replace NUM_GPUS with the number of GPUs you want to use.\n")
 
     GPT_CONFIG_124M = {
-        "vocab_size": 50304,     # Vocabulary size
-        "context_length": 1024,  # Input tokens per training example
-        "emb_dim": 768,          # Embedding dimension
-        "n_heads": 12,           # Number of attention heads
-        "n_layers": 12,          # Number of layers
-        "drop_rate": 0.1,        # Dropout rate
-        "qkv_bias": False        # Query-key-value bias
+        "vocab_size": 50304,
+        "context_length": 1024,
+        "emb_dim": 2048,         # Increased from 768 to 2048
+        "n_heads": 16,           # Increased from 12 to 16
+        "n_layers": 24,          # Increased from 12 to 24
+        "drop_rate": 0.1,
+        "qkv_bias": False
     }
 
     OTHER_SETTINGS = {
-        "learning_rate": 5e-4,  # * world_size,  # NEW: Increase learning rate to account for multiple GPUs
+        "learning_rate": 5e-4 * world_size,  # Scale learning rate with number of GPUs
         "num_epochs": 50,
-        "batch_size": 32,
-        "weight_decay": 0.1
+        "batch_size": 8,  # Per GPU batch size
+        "weight_decay": 0.1,
+        "gradient_accumulation_steps": 4
     }
 
-    ###########################
-    # Initiate training
-    ###########################
-
-    train_losses, val_losses, tokens_seen, model = main(
-        GPT_CONFIG_124M, OTHER_SETTINGS,
-        rank, world_size  # NEW
-    )
-
-    ###########################
-    # After training
-    ###########################
-
-    # NEW: Only create 1 plot
-    if rank == 0:
-        # Plot results
-        epochs_tensor = torch.linspace(0, OTHER_SETTINGS["num_epochs"], len(train_losses))
-        plot_losses(epochs_tensor, tokens_seen, train_losses, val_losses)
-        plt.savefig("loss.pdf")
-
-    # Save and load model
-    #
-    # compiled = hasattr(model, "_orig_mod")
-    # if compiled:
-    #     torch.save(model._orig_mod.state_dict(), "model.pth")
-    # else:
-    #     torch.save(model.state_dict(), "model.pth")
-    #
-    # model = GPTModel(GPT_CONFIG_124M)
-    # model.load_state_dict(torch.load("model.pth", weights_only=True))
+    try:
+        train_losses, val_losses, tokens_seen, model = main(
+            GPT_CONFIG_124M, OTHER_SETTINGS,
+            rank, world_size
+        )
+        
+        # Only create plot on rank 0
+        if rank == 0:
+            epochs_tensor = torch.linspace(0, OTHER_SETTINGS["num_epochs"], len(train_losses))
+            plot_losses(epochs_tensor, tokens_seen, train_losses, val_losses)
+            plt.savefig("loss.pdf")
+            
+    except Exception as e:
+        print(f"[rank{rank}]: Error occurred: {str(e)}")
+        raise e
+    finally:
+        # Ensure process group is destroyed
+        if torch.distributed.is_initialized():
+            torch.distributed.destroy_process_group()

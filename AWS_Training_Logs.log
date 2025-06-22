@@ -1,0 +1,219 @@
+((venv) ) ubuntu@ip-172-31-4-24:~/LLM-Training$ torchrun --nproc_per_node=4 02_opt_multi_gpu_ddp.py
+W0622 22:43:18.542000 21763 torch/distributed/run.py:766] 
+W0622 22:43:18.542000 21763 torch/distributed/run.py:766] *****************************************
+W0622 22:43:18.542000 21763 torch/distributed/run.py:766] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0622 22:43:18.542000 21763 torch/distributed/run.py:766] *****************************************
+
+Using 4 GPUs
+GPU 0: NVIDIA A10G
+GPU 1: NVIDIA A10G
+GPU 2: NVIDIA A10G
+GPU 3: NVIDIA A10G
+
+PyTorch version: 2.7.1+cu126
+CUDA version: 12.6
+Using GPU: NVIDIA A10G
+Process rank: 0, World size: 4
+Using tensor cores
+
+
+Total number of parameters: 1,416,597,504
+
+/home/ubuntu/LLM-Training/venv/lib/python3.12/site-packages/torch/utils/checkpoint.py:552: UserWarning: torch.utils.checkpoint.checkpoint_sequential: the use_reentrant parameter should be passed explicitly. In version 2.5 we will raise an exception if use_reentrant is not passed. use_reentrant=False is recommended, but if you need to preserve the current default behavior, you can pass use_reentrant=True. Refer to docs for more details on the differences between the two variants.
+  warnings.warn(
+/home/ubuntu/LLM-Training/venv/lib/python3.12/site-packages/torch/utils/checkpoint.py:552: UserWarning: torch.utils.checkpoint.checkpoint_sequential: the use_reentrant parameter should be passed explicitly. In version 2.5 we will raise an exception if use_reentrant is not passed. use_reentrant=False is recommended, but if you need to preserve the current default behavior, you can pass use_reentrant=True. Refer to docs for more details on the differences between the two variants.
+  warnings.warn(
+/home/ubuntu/LLM-Training/venv/lib/python3.12/site-packages/torch/utils/checkpoint.py:552: UserWarning: torch.utils.checkpoint.checkpoint_sequential: the use_reentrant parameter should be passed explicitly. In version 2.5 we will raise an exception if use_reentrant is not passed. use_reentrant=False is recommended, but if you need to preserve the current default behavior, you can pass use_reentrant=True. Refer to docs for more details on the differences between the two variants.
+  warnings.warn(
+/home/ubuntu/LLM-Training/venv/lib/python3.12/site-packages/torch/utils/checkpoint.py:552: UserWarning: torch.utils.checkpoint.checkpoint_sequential: the use_reentrant parameter should be passed explicitly. In version 2.5 we will raise an exception if use_reentrant is not passed. use_reentrant=False is recommended, but if you need to preserve the current default behavior, you can pass use_reentrant=True. Refer to docs for more details on the differences between the two variants.
+  warnings.warn(
+Ep 1, Step 000000, Train: 11.000, Val: 11.000, Step tok/sec: 2498, Global avg tok/sec: 2498
+/home/ubuntu/LLM-Training/venv/lib/python3.12/site-packages/torch/utils/checkpoint.py:552: UserWarning: torch.utils.checkpoint.checkpoint_sequential: the use_reentrant parameter should be passed explicitly. In version 2.5 we will raise an exception if use_reentrant is not passed. use_reentrant=False is recommended, but if you need to preserve the current default behavior, you can pass use_reentrant=True. Refer to docs for more details on the differences between the two variants.
+  warnings.warn(
+/home/ubuntu/LLM-Training/venv/lib/python3.12/site-packages/torch/utils/checkpoint.py:552: UserWarning: torch.utils.checkpoint.checkpoint_sequential: the use_reentrant parameter should be passed explicitly. In version 2.5 we will raise an exception if use_reentrant is not passed. use_reentrant=False is recommended, but if you need to preserve the current default behavior, you can pass use_reentrant=True. Refer to docs for more details on the differences between the two variants.
+  warnings.warn(
+/home/ubuntu/LLM-Training/venv/lib/python3.12/site-packages/torch/utils/checkpoint.py:552: UserWarning: torch.utils.checkpoint.checkpoint_sequential: the use_reentrant parameter should be passed explicitly. In version 2.5 we will raise an exception if use_reentrant is not passed. use_reentrant=False is recommended, but if you need to preserve the current default behavior, you can pass use_reentrant=True. Refer to docs for more details on the differences between the two variants.
+  warnings.warn(
+/home/ubuntu/LLM-Training/venv/lib/python3.12/site-packages/torch/utils/checkpoint.py:552: UserWarning: torch.utils.checkpoint.checkpoint_sequential: the use_reentrant parameter should be passed explicitly. In version 2.5 we will raise an exception if use_reentrant is not passed. use_reentrant=False is recommended, but if you need to preserve the current default behavior, you can pass use_reentrant=True. Refer to docs for more details on the differences between the two variants.
+  warnings.warn(
+Ep 1, Step 000005, Train: 10.812, Val: 11.000, Step tok/sec: 6799, Global avg tok/sec: 5283
+Ep 1, Step 000010, Train: 9.062, Val: 9.250, Step tok/sec: 12704, Global avg tok/sec: 7193
+Every effort moves you the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the
+
+Allocated memory: 13.2091 GB
+Reserved memory: 17.0020 GB
+
+/home/ubuntu/LLM-Training/venv/lib/python3.12/site-packages/torch/utils/checkpoint.py:552: UserWarning: torch.utils.checkpoint.checkpoint_sequential: the use_reentrant parameter should be passed explicitly. In version 2.5 we will raise an exception if use_reentrant is not passed. use_reentrant=False is recommended, but if you need to preserve the current default behavior, you can pass use_reentrant=True. Refer to docs for more details on the differences between the two variants.
+  warnings.warn(
+Ep 2, Step 000015, Train: 7.875, Val: 8.188, Step tok/sec: 5782, Global avg tok/sec: 6683
+Ep 2, Step 000020, Train: 8.625, Val: 9.250, Step tok/sec: 11305, Global avg tok/sec: 7404
+Ep 2, Step 000025, Train: 8.375, Val: 9.062, Step tok/sec: 11388, Global avg tok/sec: 7938
+Ep 3, Step 000030, Train: 8.000, Val: 8.938, Step tok/sec: 11094, Global avg tok/sec: 8320
+Ep 3, Step 000035, Train: 7.812, Val: 8.750, Step tok/sec: 12642, Global avg tok/sec: 8734
+Ep 4, Step 000040, Train: 7.625, Val: 8.500, Step tok/sec: 10703, Global avg tok/sec: 8935
+Ep 4, Step 000045, Train: 7.281, Val: 8.188, Step tok/sec: 11646, Global avg tok/sec: 9167
+Ep 4, Step 000050, Train: 7.312, Val: 8.125, Step tok/sec: 11191, Global avg tok/sec: 9332
+Ep 5, Step 000055, Train: 6.969, Val: 7.812, Step tok/sec: 11544, Global avg tok/sec: 9495
+Ep 5, Step 000060, Train: 6.938, Val: 7.781, Step tok/sec: 10734, Global avg tok/sec: 9585
+Ep 6, Step 000065, Train: 6.812, Val: 7.812, Step tok/sec: 10981, Global avg tok/sec: 9679
+Ep 6, Step 000070, Train: 6.844, Val: 7.938, Step tok/sec: 11647, Global avg tok/sec: 9795
+Ep 6, Step 000075, Train: 6.812, Val: 7.969, Step tok/sec: 12031, Global avg tok/sec: 9916
+Every effort moves you                                                  
+
+Allocated memory: 13.2091 GB
+Reserved memory: 19.4043 GB
+
+Ep 7, Step 000080, Train: 7.062, Val: 7.938, Step tok/sec: 11380, Global avg tok/sec: 9996
+Ep 7, Step 000085, Train: 6.938, Val: 7.844, Step tok/sec: 10986, Global avg tok/sec: 10048
+Ep 7, Step 000090, Train: 6.906, Val: 7.844, Step tok/sec: 11271, Global avg tok/sec: 10109
+Ep 8, Step 000095, Train: 6.719, Val: 7.750, Step tok/sec: 11234, Global avg tok/sec: 10162
+Ep 8, Step 000100, Train: 6.656, Val: 7.656, Step tok/sec: 12398, Global avg tok/sec: 10253
+Ep 9, Step 000105, Train: 6.719, Val: 7.656, Step tok/sec: 11711, Global avg tok/sec: 10314
+Ep 9, Step 000110, Train: 6.719, Val: 7.656, Step tok/sec: 11981, Global avg tok/sec: 10379
+Ep 9, Step 000115, Train: 6.719, Val: 7.656, Step tok/sec: 11477, Global avg tok/sec: 10422
+Ep 10, Step 000120, Train: 6.656, Val: 7.656, Step tok/sec: 10985, Global avg tok/sec: 10444
+Ep 10, Step 000125, Train: 6.625, Val: 7.656, Step tok/sec: 11312, Global avg tok/sec: 10476
+Ep 11, Step 000130, Train: 6.625, Val: 7.656, Step tok/sec: 11431, Global avg tok/sec: 10509
+Ep 11, Step 000135, Train: 6.594, Val: 7.625, Step tok/sec: 11344, Global avg tok/sec: 10538
+Ep 11, Step 000140, Train: 6.594, Val: 7.625, Step tok/sec: 11933, Global avg tok/sec: 10582
+Every effort moves you                                                  
+
+Allocated memory: 13.2091 GB
+Reserved memory: 18.4082 GB
+
+Ep 12, Step 000145, Train: 6.562, Val: 7.625, Step tok/sec: 11198, Global avg tok/sec: 10602
+Ep 12, Step 000150, Train: 6.500, Val: 7.562, Step tok/sec: 11203, Global avg tok/sec: 10621
+Ep 12, Step 000155, Train: 6.500, Val: 7.562, Step tok/sec: 11756, Global avg tok/sec: 10654
+Ep 13, Step 000160, Train: 6.594, Val: 7.562, Step tok/sec: 11106, Global avg tok/sec: 10667
+Ep 13, Step 000165, Train: 6.594, Val: 7.562, Step tok/sec: 11602, Global avg tok/sec: 10693
+Ep 14, Step 000170, Train: 6.469, Val: 7.562, Step tok/sec: 11435, Global avg tok/sec: 10713
+Ep 14, Step 000175, Train: 6.438, Val: 7.531, Step tok/sec: 12660, Global avg tok/sec: 10760
+Ep 14, Step 000180, Train: 6.438, Val: 7.531, Step tok/sec: 11554, Global avg tok/sec: 10781
+Ep 15, Step 000185, Train: 6.500, Val: 7.562, Step tok/sec: 11121, Global avg tok/sec: 10790
+Ep 15, Step 000190, Train: 6.500, Val: 7.594, Step tok/sec: 11128, Global avg tok/sec: 10798
+Ep 16, Step 000195, Train: 6.500, Val: 7.594, Step tok/sec: 11655, Global avg tok/sec: 10819
+Ep 16, Step 000200, Train: 6.500, Val: 7.562, Step tok/sec: 10892, Global avg tok/sec: 10820
+Ep 16, Step 000205, Train: 6.500, Val: 7.562, Step tok/sec: 11426, Global avg tok/sec: 10834
+Every effort moves you                                                  
+
+Allocated memory: 13.2091 GB
+Reserved memory: 18.8965 GB
+
+Ep 17, Step 000210, Train: 6.594, Val: 7.531, Step tok/sec: 11522, Global avg tok/sec: 10850
+Ep 17, Step 000215, Train: 6.562, Val: 7.531, Step tok/sec: 12371, Global avg tok/sec: 10881
+Ep 17, Step 000220, Train: 6.562, Val: 7.500, Step tok/sec: 11303, Global avg tok/sec: 10890
+Ep 18, Step 000225, Train: 6.438, Val: 7.500, Step tok/sec: 11057, Global avg tok/sec: 10893
+Ep 18, Step 000230, Train: 6.438, Val: 7.531, Step tok/sec: 11615, Global avg tok/sec: 10908
+Ep 19, Step 000235, Train: 6.531, Val: 7.531, Step tok/sec: 11416, Global avg tok/sec: 10918
+Ep 19, Step 000240, Train: 6.500, Val: 7.531, Step tok/sec: 12704, Global avg tok/sec: 10950
+Ep 19, Step 000245, Train: 6.500, Val: 7.531, Step tok/sec: 11532, Global avg tok/sec: 10962
+Ep 20, Step 000250, Train: 6.469, Val: 7.500, Step tok/sec: 11108, Global avg tok/sec: 10964
+Ep 20, Step 000255, Train: 6.469, Val: 7.500, Step tok/sec: 11182, Global avg tok/sec: 10969
+Ep 21, Step 000260, Train: 6.656, Val: 7.500, Step tok/sec: 11588, Global avg tok/sec: 10980
+Ep 21, Step 000265, Train: 6.656, Val: 7.500, Step tok/sec: 10934, Global avg tok/sec: 10979
+Ep 21, Step 000270, Train: 6.656, Val: 7.500, Step tok/sec: 11407, Global avg tok/sec: 10987
+Every effort moves you                                                  
+
+Allocated memory: 13.2091 GB
+Reserved memory: 18.8965 GB
+
+Ep 22, Step 000275, Train: 6.562, Val: 7.500, Step tok/sec: 11523, Global avg tok/sec: 10996
+Ep 22, Step 000280, Train: 6.531, Val: 7.500, Step tok/sec: 12332, Global avg tok/sec: 11017
+Ep 22, Step 000285, Train: 6.531, Val: 7.469, Step tok/sec: 11342, Global avg tok/sec: 11023
+Ep 23, Step 000290, Train: 6.562, Val: 7.469, Step tok/sec: 11085, Global avg tok/sec: 11024
+Ep 23, Step 000295, Train: 6.562, Val: 7.469, Step tok/sec: 11594, Global avg tok/sec: 11033
+Ep 24, Step 000300, Train: 6.281, Val: 7.438, Step tok/sec: 11445, Global avg tok/sec: 11039
+Ep 24, Step 000305, Train: 6.250, Val: 7.406, Step tok/sec: 12641, Global avg tok/sec: 11062
+Ep 24, Step 000310, Train: 6.250, Val: 7.375, Step tok/sec: 11544, Global avg tok/sec: 11070
+Ep 25, Step 000315, Train: 6.406, Val: 7.375, Step tok/sec: 11098, Global avg tok/sec: 11070
+Ep 25, Step 000320, Train: 6.406, Val: 7.375, Step tok/sec: 11107, Global avg tok/sec: 11071
+Ep 26, Step 000325, Train: 6.375, Val: 7.344, Step tok/sec: 11596, Global avg tok/sec: 11079
+Ep 26, Step 000330, Train: 6.344, Val: 7.344, Step tok/sec: 10904, Global avg tok/sec: 11076
+Ep 26, Step 000335, Train: 6.344, Val: 7.344, Step tok/sec: 11455, Global avg tok/sec: 11081
+Every effort moves you                                                  
+
+Allocated memory: 13.2091 GB
+Reserved memory: 18.8965 GB
+
+Ep 27, Step 000340, Train: 6.281, Val: 7.312, Step tok/sec: 11506, Global avg tok/sec: 11087
+Ep 27, Step 000345, Train: 6.219, Val: 7.281, Step tok/sec: 12360, Global avg tok/sec: 11104
+Ep 27, Step 000350, Train: 6.219, Val: 7.250, Step tok/sec: 11296, Global avg tok/sec: 11107
+Ep 28, Step 000355, Train: 6.406, Val: 7.250, Step tok/sec: 11054, Global avg tok/sec: 11106
+Ep 28, Step 000360, Train: 6.406, Val: 7.219, Step tok/sec: 11606, Global avg tok/sec: 11112
+Ep 29, Step 000365, Train: 6.062, Val: 7.219, Step tok/sec: 11413, Global avg tok/sec: 11116
+Ep 29, Step 000370, Train: 6.031, Val: 7.219, Step tok/sec: 12685, Global avg tok/sec: 11135
+Ep 29, Step 000375, Train: 6.031, Val: 7.219, Step tok/sec: 11527, Global avg tok/sec: 11140
+Ep 30, Step 000380, Train: 6.125, Val: 7.219, Step tok/sec: 11102, Global avg tok/sec: 11140
+Ep 30, Step 000385, Train: 6.125, Val: 7.219, Step tok/sec: 11218, Global avg tok/sec: 11141
+Ep 31, Step 000390, Train: 6.000, Val: 7.188, Step tok/sec: 11584, Global avg tok/sec: 11146
+Ep 31, Step 000395, Train: 5.969, Val: 7.156, Step tok/sec: 10915, Global avg tok/sec: 11143
+Ep 31, Step 000400, Train: 5.969, Val: 7.156, Step tok/sec: 11394, Global avg tok/sec: 11146
+Every effort moves you                                                  
+
+Allocated memory: 13.2091 GB
+Reserved memory: 18.8965 GB
+
+Ep 32, Step 000405, Train: 6.000, Val: 7.156, Step tok/sec: 11539, Global avg tok/sec: 11151
+Ep 32, Step 000410, Train: 6.000, Val: 7.188, Step tok/sec: 12331, Global avg tok/sec: 11164
+Ep 32, Step 000415, Train: 5.969, Val: 7.188, Step tok/sec: 11278, Global avg tok/sec: 11165
+Ep 33, Step 000420, Train: 6.156, Val: 7.156, Step tok/sec: 11074, Global avg tok/sec: 11164
+Ep 33, Step 000425, Train: 6.125, Val: 7.156, Step tok/sec: 11637, Global avg tok/sec: 11169
+Ep 34, Step 000430, Train: 6.031, Val: 7.125, Step tok/sec: 11428, Global avg tok/sec: 11172
+Ep 34, Step 000435, Train: 6.000, Val: 7.125, Step tok/sec: 12649, Global avg tok/sec: 11187
+Ep 34, Step 000440, Train: 6.031, Val: 7.094, Step tok/sec: 11508, Global avg tok/sec: 11191
+Ep 35, Step 000445, Train: 6.094, Val: 7.094, Step tok/sec: 11167, Global avg tok/sec: 11191
+Ep 35, Step 000450, Train: 6.125, Val: 7.094, Step tok/sec: 11117, Global avg tok/sec: 11190
+Ep 36, Step 000455, Train: 6.062, Val: 7.094, Step tok/sec: 11606, Global avg tok/sec: 11194
+Ep 36, Step 000460, Train: 6.031, Val: 7.094, Step tok/sec: 10898, Global avg tok/sec: 11191
+Ep 36, Step 000465, Train: 6.031, Val: 7.094, Step tok/sec: 11426, Global avg tok/sec: 11193
+Every effort moves you                                                  
+
+Allocated memory: 13.2091 GB
+Reserved memory: 18.8965 GB
+
+Ep 37, Step 000470, Train: 5.938, Val: 7.094, Step tok/sec: 11550, Global avg tok/sec: 11197
+Ep 37, Step 000475, Train: 5.875, Val: 7.094, Step tok/sec: 12331, Global avg tok/sec: 11208
+Ep 37, Step 000480, Train: 5.875, Val: 7.062, Step tok/sec: 11364, Global avg tok/sec: 11209
+Ep 38, Step 000485, Train: 6.000, Val: 7.031, Step tok/sec: 11030, Global avg tok/sec: 11208
+Ep 38, Step 000490, Train: 6.000, Val: 7.031, Step tok/sec: 11669, Global avg tok/sec: 11212
+Ep 39, Step 000495, Train: 5.969, Val: 7.031, Step tok/sec: 11415, Global avg tok/sec: 11214
+Ep 39, Step 000500, Train: 5.938, Val: 7.031, Step tok/sec: 12699, Global avg tok/sec: 11227
+Ep 39, Step 000505, Train: 5.938, Val: 7.000, Step tok/sec: 11530, Global avg tok/sec: 11230
+Ep 40, Step 000510, Train: 5.969, Val: 6.969, Step tok/sec: 11090, Global avg tok/sec: 11229
+Ep 40, Step 000515, Train: 5.969, Val: 6.969, Step tok/sec: 11135, Global avg tok/sec: 11228
+Ep 41, Step 000520, Train: 5.875, Val: 6.969, Step tok/sec: 11568, Global avg tok/sec: 11231
+Ep 41, Step 000525, Train: 5.844, Val: 6.969, Step tok/sec: 10925, Global avg tok/sec: 11228
+Ep 41, Step 000530, Train: 5.844, Val: 7.000, Step tok/sec: 11413, Global avg tok/sec: 11230
+Every effort moves you   ”     ”     ’s   ” ” ”  ” ” ” ” ” ”
+
+Allocated memory: 13.2091 GB
+Reserved memory: 18.8965 GB
+
+Ep 42, Step 000535, Train: 5.969, Val: 6.969, Step tok/sec: 11512, Global avg tok/sec: 11232
+Ep 42, Step 000540, Train: 5.906, Val: 6.969, Step tok/sec: 12334, Global avg tok/sec: 11241
+Ep 42, Step 000545, Train: 5.906, Val: 6.969, Step tok/sec: 11289, Global avg tok/sec: 11242
+Ep 43, Step 000550, Train: 5.875, Val: 6.938, Step tok/sec: 11149, Global avg tok/sec: 11241
+Ep 43, Step 000555, Train: 5.875, Val: 6.938, Step tok/sec: 11573, Global avg tok/sec: 11244
+Ep 44, Step 000560, Train: 5.750, Val: 6.938, Step tok/sec: 11420, Global avg tok/sec: 11246
+Ep 44, Step 000565, Train: 5.688, Val: 6.938, Step tok/sec: 12664, Global avg tok/sec: 11257
+Ep 44, Step 000570, Train: 5.688, Val: 6.906, Step tok/sec: 11533, Global avg tok/sec: 11259
+Ep 45, Step 000575, Train: 5.688, Val: 6.938, Step tok/sec: 11093, Global avg tok/sec: 11258
+Ep 45, Step 000580, Train: 5.688, Val: 6.938, Step tok/sec: 11116, Global avg tok/sec: 11256
+Ep 46, Step 000585, Train: 5.844, Val: 6.906, Step tok/sec: 11647, Global avg tok/sec: 11260
+Ep 46, Step 000590, Train: 5.812, Val: 6.906, Step tok/sec: 10898, Global avg tok/sec: 11256
+Ep 46, Step 000595, Train: 5.812, Val: 6.906, Step tok/sec: 11413, Global avg tok/sec: 11258
+Every effort moves you                                                  
+
+Allocated memory: 13.2091 GB
+Reserved memory: 18.8965 GB
+
+Ep 47, Step 000600, Train: 5.844, Val: 6.875, Step tok/sec: 11548, Global avg tok/sec: 11260
+Ep 47, Step 000605, Train: 5.812, Val: 6.906, Step tok/sec: 12344, Global avg tok/sec: 11268
+Ep 47, Step 000610, Train: 5.812, Val: 6.875, Step tok/sec: 11427, Global avg tok/sec: 11270
+Ep 48, Step 000615, Train: 5.531, Val: 6.875, Step tok/sec: 11040, Global avg tok/sec: 11268
+Ep 48, Step 000620, Train: 5.562, Val: 6.875, Step tok/sec: 11691, Global avg tok/sec: 11271
+Ep 49, Step 000625, Train: 5.812, Val: 6.875, Step tok/sec: 11383, Global avg tok/sec: 11272
+Ep 49, Step 000630, Train: 5.781, Val: 6.844, Step tok/sec: 12679, Global avg tok/sec: 11282
+Ep 49, Step 000635, Train: 5.781, Val: 6.875, Step tok/sec: 11561, Global avg tok/sec: 11284
+Ep 50, Step 000640, Train: 5.781, Val: 6.875, Step tok/sec: 11110, Global avg tok/sec: 11282
+Ep 50, Step 000645, Train: 5.781, Val: 6.875, Step tok/sec: 11152, Global avg tok/sec: 11281
