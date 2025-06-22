@@ -489,6 +489,12 @@ def main(gpt_config, settings, rank, world_size):
     model = model.to(torch.bfloat16)
     # NEW: Wrap model with DDP
     model = DDP(model, device_ids=[rank])
+    
+    # NEW: Print total number of parameters
+    if rank == 0:  # Only print on main process
+        total_params = sum(p.numel() for p in model.parameters())
+        print(f"\nTotal number of parameters: {total_params:,}\n")
+        
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=settings["learning_rate"], weight_decay=settings["weight_decay"],
         fused=True
